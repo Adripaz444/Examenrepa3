@@ -130,6 +130,25 @@ function toggleMenu(){
 }
 
 </script>
+<script>
+function agregarCarrito(nombre, precio, imagen){
 
+    let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+
+    carrito.push({
+        nombre: nombre,
+        precio: precio,
+        imagen: imagen
+    });
+
+    localStorage.setItem("carrito", JSON.stringify(carrito));
+
+    alert(nombre + " agregado al carrito.");
+}
+
+function toggleMenu(){
+    document.querySelector(".nav").classList.toggle("active");
+}
+</script>
 </body>
 </html>
