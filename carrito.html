@@ -1,198 +1,179 @@
 <!DOCTYPE html>
 <html lang="es">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width-device" initial scale>
-    </head>
-    <title>AC Coffee </title>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AC Coffee | Carrito</title>
+
     <link rel="stylesheet" href="style.css">
-    <body>
-        
-        <nav class="navbar">
-            <button class="hamburger" onclick="toggleMenu()">
+</head>
 
-    <span class="bar"></span>
-    <span class="bar"></span>
-    <span class="bar"></span>
+<body>
 
-</button>
+    <nav class="navbar">
+        <button class="hamburger" onclick="toggleMenu()">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </button>
+
         <ul class="nav">
-        <li><a href="index.html">Inicio</a></li>
-        <li><a href="#">Menu</a>
-            <ul>
-                <li><a href="Bebidas.html">Bebidas</a></li>
-                <li><a href="Postres.html">Panaderia y Postres</a></li>
-                <li><a href="Comidas.html"></a>Comidas</li>
-            </ul>
-        </li>
-        <li><a href="ubicaciones.html">Ubicaciones</a></li>
-        <li><a href="info.html">Acerca de Nosotros</a></li>
-        <li><a href="horario.html">Horarios</a></li>
-        <li><a href="carrito.html">🛒</a></li>
-        <li><a href="contacto.html">Unete a nuestro equipo</a></li>
+            <li><a href="index.html">Inicio</a></li>
+
+            <li>
+                <a href="#">Menú</a>
+                <ul>
+                    <li><a href="Bebidas.html">Bebidas</a></li>
+                    <li><a href="Postres.html">Panadería y Postres</a></li>
+                    <li><a href="Comidas.html">Comidas</a></li>
+                </ul>
+            </li>
+
+            <li><a href="pedidos.html">Pedidos</a></li>
+            <li><a href="ubicaciones.html">Ubicaciones</a></li>
+            <li><a href="info.html">Acerca de Nosotros</a></li>
+            <li><a href="horario.html">Horarios</a></li>
+            <li><a href="carrito.html">🛒</a></li>
         </ul>
-<a href="index.html" class="back">
-← Volver
-</a>
+    </nav>
 
-<section class="container">
+    <a href="index.html" class="back">
+        ← Volver
+    </a>
 
-<h1 class="title">
-🛒 Tu Carrito
-</h1>
+    <section class="container">
 
-<div id="carrito"></div>
+        <h1 class="title">🛒 Tu Carrito</h1>
 
-<div class="total-box">
+        <div id="carrito"></div>
 
-<h2>Total</h2>
+        <div class="total-box">
 
-<div class="total" id="total">
-Q 0
-</div>
+            <h2>Total</h2>
 
-<div class="buttons">
+            <div class="total" id="total">
+                Q 0
+            </div>
 
-<button class="vaciar" onclick="vaciarCarrito()">
-Vaciar carrito
-</button>
+            <div class="buttons">
 
-<a href="checkout.html">
+                <button class="vaciar" onclick="vaciarCarrito()">
+                    Vaciar carrito
+                </button>
 
-<button
-class="comprar"
-id="btnComprar">
+                <a href="checkout.html">
+                    <button class="comprar" id="btnComprar">
+                        Finalizar Compra 💳
+                    </button>
+                </a>
 
-Finalizar Compra 💳
+            </div>
 
-</button>
+            <div class="mensaje" id="mensajeCompra">
+                ✅ Tu compra está lista.
+                <br>
+                Gracias por confiar en AC Coffee.
+            </div>
 
-</a>
-</div>
+        </div>
 
-<div
-class="mensaje"
-id="mensajeCompra">
+    </section>
 
-✅ Tu compra está lista.
-Gracias por confiar en BLACKPISTONS.
+    <script>
 
-</div>
+        function toggleMenu() {
+            document.querySelector(".nav").classList.toggle("active");
+        }
 
-</div>
+        let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
 
-</section>
+        function renderCarrito() {
 
-<script>
+            const contenedor = document.getElementById("carrito");
+            const totalElemento = document.getElementById("total");
+            const btnComprar = document.getElementById("btnComprar");
 
-let carrito =
-JSON.parse(localStorage.getItem("carrito"))
-|| [];
+            contenedor.innerHTML = "";
 
-function renderCarrito(){
+            let total = 0;
 
-const contenedor =
-document.getElementById("carrito");
+            if (carrito.length === 0) {
 
-const totalElemento =
-document.getElementById("total");
+                contenedor.innerHTML = `
+                    <h2 style="text-align:center;color:#888;">
+                        Tu carrito está vacío ☕
+                    </h2>
+                `;
 
-const btnComprar =
-document.getElementById("btnComprar");
+                btnComprar.style.display = "none";
+            } else {
 
-contenedor.innerHTML = "";
+                carrito.forEach((producto, index) => {
 
-let total = 0;
+                    total += producto.precio;
 
-if(carrito.length === 0){
+                    contenedor.innerHTML += `
+                        <div class="producto">
 
-contenedor.innerHTML = `
-<h2 style="text-align:center;color:#888;">
-Tu carrito está vacío 🏍️
-</h2>
-`;
+                            <img src="${producto.imagen}" alt="${producto.nombre}">
 
-btnComprar.style.display = "none";
+                            <div class="info">
+                                <h3>${producto.nombre}</h3>
+                                <p class="price">
+                                    Q ${producto.precio.toLocaleString()}
+                                </p>
+                            </div>
 
-}
+                            <button
+                                class="delete"
+                                onclick="eliminar(${index})">
+                                Eliminar
+                            </button>
 
-carrito.forEach((producto,index)=>{
+                        </div>
+                    `;
 
-total += producto.precio;
+                });
 
-contenedor.innerHTML += `
+                btnComprar.style.display = "inline-block";
+            }
 
-<div class="producto">
+            totalElemento.innerText = "Q " + total.toLocaleString();
+        }
 
-<img src="${producto.imagen}">
+        function eliminar(index) {
 
-<div class="info">
-<h3>${producto.nombre}</h3>
-<p class="price">
-Q ${producto.precio.toLocaleString()}
-</p>
-</div>
+            carrito.splice(index, 1);
 
-<button
-class="delete"
-onclick="eliminar(${index})">
+            localStorage.setItem("carrito", JSON.stringify(carrito));
 
-Eliminar
+            renderCarrito();
 
-</button>
+        }
 
-</div>
-`;
+        function vaciarCarrito() {
 
-});
+            carrito = [];
 
-totalElemento.innerText =
-"Q " + total.toLocaleString();
+            localStorage.setItem("carrito", JSON.stringify(carrito));
 
-if(carrito.length > 0){
-btnComprar.style.display = "inline-block";
-}
+            document.getElementById("mensajeCompra").style.display = "none";
 
-}
+            renderCarrito();
 
-function eliminar(index){
+        }
 
-carrito.splice(index,1);
+        function compraLista() {
 
-localStorage.setItem(
-"carrito",
-JSON.stringify(carrito)
-);
+            document.getElementById("mensajeCompra").style.display = "block";
 
-renderCarrito();
+        }
 
-}
+        renderCarrito();
 
-function vaciarCarrito(){
-
-localStorage.removeItem("carrito");
-
-carrito = [];
-
-document.getElementById(
-"mensajeCompra"
-).style.display = "none";
-
-renderCarrito();
-
-}
-
-function compraLista(){
-
-document.getElementById(
-"mensajeCompra"
-).style.display = "block";
-
-}
-
-renderCarrito();
-
-</script>
+    </script>
 
 </body>
+
 </html>
